@@ -1,0 +1,1738 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PARUTHI — Simple Edition, Tiny Tradition</title>
+
+  <!-- Google Fonts: Cinzel / Playfair Display (Ornate Serif), Great Vibes (Calligraphic P), & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Great+Vibes&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- QRCode.js CDN for Live Dynamic UPI QR Generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <!-- Tailwind Custom Design Tokens matching PARUTHI Logo Flavor -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ivory: '#FFF7F3',        /* Soft Cotton Blush Cream */
+            peach: '#FCD5C7',        /* Logo Medallion Blush Peach */
+            sand: '#FCE8E0',         /* Warm Peach Tint */
+            cream: '#FFFDF7',        /* Pure Cotton Puff Cream */
+            charcoal: '#241B1E',     /* Deep Plum-Charcoal Text */
+            muted: '#6D585E',        /* Soft Rose-Taupe Muted Text */
+            berry: '#9E0B4A',        /* Logo Deep Berry Magenta */
+            berryDark: '#7C0839',    /* Hover Berry Magenta */
+            gold: '#D4A024',         /* Logo Antique Gold */
+            goldLight: '#F2CE68',    /* Gold Shimmer Highlight */
+            olive: '#5D6E4E',        /* Natural Calyx Leaf Green */
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            display: ['"Cinzel"', 'Georgia', 'serif'],
+            script: ['"Great Vibes"', 'cursive'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    body {
+      background-color: #FFF7F3;
+      color: #241B1E;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    @keyframes slideUpFade {
+      0% { opacity: 0; transform: translate(-50%, 16px); }
+      100% { opacity: 1; transform: translate(-50%, 0); }
+    }
+    .toast-enter {
+      animation: slideUpFade 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .gold-ring {
+      box-shadow: 0 0 0 3px #D4A024, 0 0 0 6px #F2CE68, 0 18px 40px -10px rgba(158, 11, 74, 0.22);
+    }
+
+    @keyframes cottonBloom {
+      0% { transform: scale(0.75) rotate(-6deg); opacity: 0.4; }
+      55% { transform: scale(1.12) rotate(3deg); opacity: 1; }
+      80% { transform: scale(0.97) rotate(-1deg); }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    .animate-cotton-bloom {
+      animation: cottonBloom 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      transform-origin: center bottom;
+    }
+
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-14px) rotate(8deg); }
+    }
+    .animate-float-slow {
+      animation: floatSlow 5.5s ease-in-out infinite;
+    }
+    .animate-float-delayed {
+      animation: floatSlow 7s ease-in-out 1.8s infinite;
+    }
+
+    .cotton-burst-particle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      will-change: transform, opacity;
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-berry selection:text-white">
+
+  <!-- 1. TOP ANNOUNCEMENT BAR -->
+  <div id="announcement-bar" class="bg-berry text-cream text-xs sm:text-sm py-2.5 px-4 text-center tracking-wide font-medium border-b border-gold/40"></div>
+
+  <!-- 2. STICKY HEADER -->
+  <header class="sticky top-0 z-40 bg-ivory/95 backdrop-blur-md border-b border-gold/30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 sm:h-20 gap-3">
+
+        <!-- Brand Logo -->
+        <a href="#" onclick="handleLogoClick(event)" title="Click for a Cotton Boll Burst!" class="flex items-center gap-3 group shrink-0">
+          <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-peach border-2 border-gold flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform relative overflow-hidden">
+            <svg class="w-9 h-9" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="32" cy="22" r="9.5" fill="#FFFDF7" stroke="#D4A024" stroke-width="2" />
+              <circle cx="22" cy="29" r="8.5" fill="#FFFDF7" stroke="#D4A024" stroke-width="2" />
+              <circle cx="42" cy="29" r="8.5" fill="#FFFDF7" stroke="#D4A024" stroke-width="2" />
+              <path d="M32 45C32 45 27 33 32 27C37 33 32 45 32 45Z" fill="#9E0B4A" />
+              <path d="M32 45C32 45 19 39 17 31C24 31 30 38 32 45Z" fill="#B51256" />
+              <path d="M32 45C32 45 45 39 47 31C40 31 34 38 32 45Z" fill="#B51256" />
+            </svg>
+          </div>
+
+          <div class="flex flex-col">
+            <div class="flex items-baseline">
+              <span class="font-script text-3xl sm:text-4xl text-berry leading-none -mr-1">P</span>
+              <span id="header-brand-name" class="font-display text-lg sm:text-xl font-bold tracking-[0.08em] text-berry group-hover:text-berryDark transition-colors leading-none">
+                ARUTHI
+              </span>
+            </div>
+            <span id="header-tagline" class="text-[9.5px] sm:text-[11px] italic font-serif tracking-wide text-berry/80 mt-0.5">
+              — Simple Edition, Tiny Tradition —
+            </span>
+          </div>
+        </a>
+
+        <!-- Desktop Search Bar -->
+        <div class="hidden md:flex items-center flex-1 max-w-md mx-5">
+          <div class="relative w-full">
+            <input
+              type="text"
+              id="desktop-search"
+              oninput="handleSearch(this.value)"
+              placeholder="Search frocks, dungarees, pattu pavadai, jablas..."
+              class="w-full bg-sand/70 border border-gold/40 rounded-full py-2 pl-10 pr-4 text-sm text-charcoal placeholder:text-muted focus:outline-none focus:border-berry focus:bg-white transition-all"
+            />
+            <svg class="w-4 h-4 text-berry/70 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1010.5 18a7.5 7.5 0 006.15-3.35z" />
+            </svg>
+          </div>
+        </div>
+
+        <!-- Right Utility Actions -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          <button
+            type="button"
+            onclick="triggerCottonBurstAtElement(this, 16)"
+            title="Pop a Cotton Boll!"
+            class="inline-flex items-center gap-1.5 text-xs font-semibold text-berry bg-peach/70 hover:bg-peach border border-gold/50 px-3 py-2 rounded-full transition-all active:scale-95"
+          >
+            <span class="text-sm leading-none">☁️</span>
+            <span class="hidden lg:inline">Cotton Pop</span>
+          </button>
+
+          <button
+            onclick="openSizeGuideModal()"
+            class="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-charcoal hover:text-berry px-3 py-2 rounded-full hover:bg-sand/70 transition-colors"
+          >
+            Kids Size Guide
+          </button>
+
+          <button
+            onclick="toggleCartDrawer(true)"
+            aria-label="Open Shopping Bag"
+            class="relative inline-flex items-center gap-2 bg-berry hover:bg-berryDark text-cream px-4 py-2.5 rounded-full text-sm font-medium transition-colors shadow-sm border border-gold/30"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+            <span class="hidden sm:inline">Bag</span>
+            <span id="cart-badge" class="bg-gold text-charcoal text-xs font-bold px-2 py-0.5 rounded-full min-w-[22px] text-center">
+              0
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Search Bar -->
+      <div class="md:hidden pb-3">
+        <div class="relative w-full">
+          <input
+            type="text"
+            id="mobile-search"
+            oninput="handleSearch(this.value)"
+            placeholder="Search frocks, dungarees, festive sets..."
+            class="w-full bg-sand/70 border border-gold/40 rounded-full py-2 pl-9 pr-4 text-sm text-charcoal placeholder:text-muted focus:outline-none focus:border-berry focus:bg-white transition-all"
+          />
+          <svg class="w-4 h-4 text-berry/70 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1010.5 18a7.5 7.5 0 006.15-3.35z" />
+          </svg>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 3. EDITORIAL HERO BANNER -->
+  <section class="relative overflow-hidden border-b border-gold/30 bg-gradient-to-br from-peach/55 via-ivory to-sand/70">
+    <div class="pointer-events-none absolute inset-0 overflow-hidden opacity-45">
+      <svg class="w-12 h-12 absolute top-10 left-[8%] animate-float-slow" viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="18" r="8" fill="#FFFDF7" stroke="#D4A024" stroke-width="1.5"/>
+        <circle cx="17" cy="24" r="7" fill="#FFFDF7" stroke="#D4A024" stroke-width="1.5"/>
+        <circle cx="31" cy="24" r="7" fill="#FFFDF7" stroke="#D4A024" stroke-width="1.5"/>
+        <path d="M24 36C24 36 16 31 15 25C20 26 24 31 24 36Z" fill="#9E0B4A"/>
+        <path d="M24 36C24 36 32 31 33 25C28 26 24 31 24 36Z" fill="#9E0B4A"/>
+      </svg>
+      <svg class="w-10 h-10 absolute bottom-12 left-[44%] animate-float-delayed" viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="18" r="8" fill="#FFFDF7" stroke="#D4A024" stroke-width="1.5"/>
+        <circle cx="17" cy="24" r="7" fill="#FFFDF7" stroke="#D4A024" stroke-width="1.5"/>
+        <circle cx="31" cy="24" r="7" fill="#FFFDF7" stroke="#D4A024" stroke-width="1.5"/>
+        <path d="M24 36C24 36 16 31 15 25C20 26 24 31 24 36Z" fill="#9E0B4A"/>
+        <path d="M24 36C24 36 32 31 33 25C28 26 24 31 24 36Z" fill="#9E0B4A"/>
+      </svg>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+        <div class="lg:col-span-6 space-y-6 text-center lg:text-left">
+          <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cream border border-gold/50 text-berry text-xs font-bold uppercase tracking-widest shadow-2xs">
+            <span class="w-2 h-2 rounded-full bg-berry animate-ping"></span>
+            Simple Edition • Tiny Tradition (0–10 Years)
+          </span>
+
+          <h1 id="hero-headline" class="font-serif text-4xl sm:text-5xl lg:text-[54px] font-semibold leading-[1.12] text-charcoal">
+            Pure Cotton Comfort &amp; Tiny Traditions for Little Ones.
+          </h1>
+
+          <p id="hero-subheadline" class="text-base sm:text-lg text-muted max-w-xl mx-auto lg:mx-0 leading-relaxed">
+            Inspired by the gentle burst of raw Paruthi cotton, we craft breathable everyday frocks, organic dungarees, and heirloom South Indian festive wear gentle on delicate young skin.
+          </p>
+
+          <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+            <a
+              href="#catalog-section"
+              onclick="triggerCottonBurstAtElement(this, 14)"
+              class="px-7 py-3.5 rounded-full bg-berry hover:bg-berryDark text-cream font-semibold text-sm tracking-wide shadow-md hover:shadow-lg transition-all border border-gold/40"
+            >
+              Shop Kids Collection
+            </a>
+            <button
+              onclick="openSizeGuideModal()"
+              class="px-6 py-3.5 rounded-full bg-cream border border-gold hover:border-berry text-berry font-semibold text-sm tracking-wide transition-colors"
+            >
+              Kids Size Chart
+            </button>
+          </div>
+
+          <div class="grid grid-cols-3 gap-4 pt-6 border-t border-gold/30 max-w-lg mx-auto lg:mx-0 text-left">
+            <div>
+              <p class="text-xs font-bold uppercase tracking-wider text-berry">100% Skin-Safe</p>
+              <p class="text-xs text-muted mt-0.5">Feather-soft pure cotton</p>
+            </div>
+            <div>
+              <p class="text-xs font-bold uppercase tracking-wider text-berry">7-Day Exchange</p>
+              <p class="text-xs text-muted mt-0.5">Easy kid size swaps</p>
+            </div>
+            <div>
+              <p class="text-xs font-bold uppercase tracking-wider text-berry">UPI &amp; COD Ready</p>
+              <p class="text-xs text-muted mt-0.5">Direct WhatsApp order</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Hero Visual: Interactive Ornate PARUTHI Brand Medallion -->
+        <div class="lg:col-span-6 flex flex-col items-center justify-center">
+          <div
+            id="hero-logo-medallion"
+            onclick="triggerCottonBurstAtElement(this, 24)"
+            title="Tap to burst cotton puffs!"
+            class="relative w-72 h-72 sm:w-96 sm:h-96 rounded-full bg-peach gold-ring flex items-center justify-center cursor-pointer select-none group transition-transform duration-300 hover:scale-[1.02]"
+          >
+            <svg class="w-full h-full p-2" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="goldGrad" x1="0" y1="0" x2="400" y2="400" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#F6D878" />
+                  <stop offset="50%" stop-color="#D4A024" />
+                  <stop offset="100%" stop-color="#B68212" />
+                </linearGradient>
+              </defs>
+
+              <circle cx="200" cy="200" r="192" stroke="url(#goldGrad)" stroke-width="5" />
+              <circle cx="200" cy="200" r="184" stroke="url(#goldGrad)" stroke-width="1.8" />
+
+              <g stroke="url(#goldGrad)" stroke-width="2" fill="url(#goldGrad)" opacity="0.92">
+                <path d="M55 128 C75 72, 130 36, 182 32 C155 44, 136 60, 122 82 C132 62, 146 48, 165 39 C122 46, 86 76, 68 118 Z" />
+                <circle cx="115" cy="54" r="3.5" />
+                <circle cx="92" cy="72" r="3" />
+                <circle cx="145" cy="40" r="3" />
+                <path d="M345 128 C325 72, 270 36, 218 32 C245 44, 264 60, 278 82 C268 62, 254 48, 235 39 C278 46, 314 76, 332 118 Z" />
+                <circle cx="285" cy="54" r="3.5" />
+                <circle cx="308" cy="72" r="3" />
+                <circle cx="255" cy="40" r="3" />
+                <path d="M55 272 C75 328, 130 364, 182 368 C155 356, 136 340, 122 318 C132 338, 146 352, 165 361 C122 354, 86 324, 68 282 Z" />
+                <circle cx="115" cy="346" r="3.5" />
+                <circle cx="92" cy="328" r="3" />
+                <path d="M345 272 C325 328, 270 364, 218 368 C245 356, 264 340, 278 318 C268 338, 254 352, 235 361 C278 354, 314 324, 332 282 Z" />
+                <circle cx="285" cy="346" r="3.5" />
+                <circle cx="308" cy="328" r="3" />
+              </g>
+
+              <g stroke="#9E0B4A" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.85">
+                <g transform="translate(92, 86) rotate(-10)">
+                  <path d="M12 4 Q20 10 28 4 L34 10 L30 16 L28 14 L28 22 L12 22 L12 14 L10 16 L6 10 Z" />
+                  <path d="M12 22 L4 46 Q12 49 20 46 Q28 49 36 46 L28 22 Z" />
+                  <line x1="15" y1="24" x2="12" y2="44" stroke-dasharray="2 2" />
+                  <line x1="25" y1="24" x2="28" y2="44" stroke-dasharray="2 2" />
+                </g>
+                <g transform="translate(118, 268) rotate(-8)">
+                  <path d="M12 4 Q20 10 28 4 L34 10 L30 16 L28 14 L28 22 L12 22 L12 14 L10 16 L6 10 Z" />
+                  <path d="M12 22 L4 46 Q12 49 20 46 Q28 49 36 46 L28 22 Z" />
+                </g>
+                <g transform="translate(274, 88) rotate(10)">
+                  <rect x="10" y="14" width="20" height="14" rx="2" />
+                  <line x1="12" y1="4" x2="14" y2="14" stroke-width="2" />
+                  <line x1="28" y1="4" x2="26" y2="14" stroke-width="2" />
+                  <rect x="15" y="18" width="10" height="7" rx="1.5" />
+                  <path d="M8 28 L32 28 L34 48 L22 48 L20 38 L18 48 L6 48 Z" />
+                </g>
+                <g transform="translate(232, 270) rotate(-6)">
+                  <rect x="10" y="14" width="20" height="14" rx="2" />
+                  <line x1="12" y1="4" x2="14" y2="14" stroke-width="2" />
+                  <line x1="28" y1="4" x2="26" y2="14" stroke-width="2" />
+                  <rect x="15" y="18" width="10" height="7" rx="1.5" />
+                  <path d="M8 28 L32 28 L34 48 L22 48 L20 38 L18 48 L6 48 Z" />
+                </g>
+              </g>
+
+              <g id="hero-cotton-bloom" class="animate-cotton-bloom" transform="translate(232, 122)">
+                <circle cx="44" cy="24" r="18" fill="#FFFDF7" stroke="url(#goldGrad)" stroke-width="2.5" />
+                <circle cx="24" cy="36" r="16" fill="#FFFDF7" stroke="url(#goldGrad)" stroke-width="2.5" />
+                <circle cx="64" cy="36" r="16" fill="#FFFDF7" stroke="url(#goldGrad)" stroke-width="2.5" />
+                <path d="M44 64 C44 64 36 44 44 33 C52 44 44 64 44 64 Z" fill="#9E0B4A" />
+                <path d="M44 64 C44 64 20 54 14 40 C27 40 39 51 44 64 Z" fill="#B51256" />
+                <path d="M44 64 C44 64 68 54 74 40 C61 40 49 51 44 64 Z" fill="#B51256" />
+              </g>
+
+              <path
+                d="M126 146 L94 268 C90 278 96 280 102 268 L138 148 M84 186 C72 162 108 134 158 138 C202 142 214 176 176 192 C142 206 96 196 76 212 C62 224 72 246 98 238 C122 230 144 218 172 234 C194 246 214 244 234 236"
+                stroke="#9E0B4A"
+                stroke-width="8.5"
+                stroke-linecap="round"
+                fill="none"
+              />
+
+              <text
+                x="156"
+                y="224"
+                fill="#9E0B4A"
+                font-family="Cinzel, Playfair Display, Georgia, serif"
+                font-weight="700"
+                font-size="37"
+                letter-spacing="2"
+              >
+                ARUTHİ
+              </text>
+
+              <line x1="76" y1="254" x2="104" y2="254" stroke="#9E0B4A" stroke-width="1.6" />
+              <text
+                x="200"
+                y="258"
+                text-anchor="middle"
+                fill="#9E0B4A"
+                font-family="Playfair Display, Georgia, serif"
+                font-style="italic"
+                font-weight="600"
+                font-size="13.5"
+                letter-spacing="0.4"
+              >
+                Simple Edition, Tiny Tradition
+              </text>
+              <line x1="296" y1="254" x2="324" y2="254" stroke="#9E0B4A" stroke-width="1.6" />
+            </svg>
+
+            <span class="absolute -bottom-3.5 bg-berry text-cream text-[11px] font-semibold px-4 py-1 rounded-full shadow-md border border-gold group-hover:bg-berryDark transition-colors">
+              ✨ Tap Emblem for Cotton Burst
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. CATALOG FILTER BAR & KIDS PRODUCT GRID -->
+  <main id="catalog-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-widest text-berry">Handpicked for 0–10 Years</span>
+        <h2 class="font-serif text-3xl sm:text-4xl font-semibold text-charcoal mt-1">Little Wardrobe</h2>
+        <p id="inventory-source-note" class="text-sm text-muted mt-1.5">Pick your child's age size directly on any outfit and add to your bag.</p>
+      </div>
+
+      <div id="category-pills" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1"></div>
+    </div>
+
+    <div class="flex items-center justify-between text-xs text-muted mb-6 pb-3 border-b border-gold/30">
+      <span id="product-count-label">Showing all kids outfits</span>
+      <button onclick="openSizeGuideModal()" class="text-berry font-semibold hover:underline sm:hidden">
+        Need help with age sizes? View Chart
+      </button>
+    </div>
+
+    <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-7 gap-y-10"></div>
+
+    <div id="empty-state" class="hidden text-center py-20 px-4 bg-sand/50 rounded-3xl border border-gold/40">
+      <p class="font-serif text-2xl text-charcoal">No little outfits matched your search</p>
+      <p class="text-sm text-muted mt-2 max-w-md mx-auto">Try clearing your search term or switching back to all kids categories.</p>
+      <button
+        onclick="resetFilters()"
+        class="mt-6 px-6 py-2.5 rounded-full bg-berry text-cream text-sm font-medium hover:bg-berryDark transition-colors"
+      >
+        Reset Filters
+      </button>
+    </div>
+  </main>
+
+  <!-- 5. FOOTER -->
+  <footer class="bg-charcoal text-cream/90 border-t-2 border-gold mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div>
+          <div class="flex items-baseline gap-1">
+            <span class="font-script text-4xl text-goldLight leading-none -mr-1">P</span>
+            <span id="footer-brand-name" class="font-display text-2xl font-bold tracking-wider text-white">ARUTHI</span>
+          </div>
+          <p class="text-xs italic font-serif tracking-wide text-goldLight mt-1">— Simple Edition, Tiny Tradition —</p>
+          <p id="footer-description" class="text-sm text-cream/75 mt-3 leading-relaxed max-w-sm">
+            Thoughtfully crafted organic cotton frocks, playful dungarees, and heirloom South Indian festive wear for babies and kids (0–10 years). Delivered pan-India.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-widest text-goldLight mb-4">Parent Care</h4>
+          <ul class="space-y-2.5 text-sm text-cream/85">
+            <li><button onclick="openSizeGuideModal()" class="hover:text-goldLight transition-colors">Kids Indian Size &amp; Age Guide</button></li>
+            <li><button onclick="openPolicyModal('shipping')" class="hover:text-goldLight transition-colors">Shipping &amp; Delivery Policy</button></li>
+            <li><button onclick="openPolicyModal('returns')" class="hover:text-goldLight transition-colors">7-Day Size Exchange &amp; Return Policy</button></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-widest text-goldLight mb-4">Direct Assistance</h4>
+          <p class="text-sm text-cream/75 mb-4">Need help picking the right age size, matching sibling sets, or festive gift wrapping?</p>
+          <a
+            id="footer-whatsapp-link"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-berry hover:bg-berryDark text-white text-sm font-medium transition-colors border border-gold/50"
+          >
+            Chat on WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <div class="border-t border-cream/10 mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-cream/55 gap-3">
+        <p>© <span id="footer-year"></span> <span id="footer-copyright-brand">PARUTHI</span> — Simple Edition, Tiny Tradition. All rights reserved.</p>
+        <p>Payments secured via UPI &amp; Direct Merchant Verification.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 6. PRODUCT QUICK-VIEW MODAL -->
+  <div id="quickview-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-charcoal/60 backdrop-blur-sm">
+    <div class="bg-ivory rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border-2 border-gold/50 relative">
+      <button
+        onclick="closeQuickViewModal()"
+        aria-label="Close modal"
+        class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-cream border border-gold/50 flex items-center justify-center text-berry hover:bg-berry hover:text-white transition-colors"
+      >
+        ✕
+      </button>
+      <div id="quickview-content" class="grid grid-cols-1 md:grid-cols-2"></div>
+    </div>
+  </div>
+
+  <!-- 7. KIDS SIZE GUIDE MODAL -->
+  <div id="sizeguide-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-charcoal/60 backdrop-blur-sm">
+    <div class="bg-ivory rounded-3xl max-w-xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl border-2 border-gold/50 relative">
+      <div class="flex items-start justify-between gap-4 mb-5">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-widest text-berry">Paruthi Fit &amp; Measurements</span>
+          <h3 class="font-serif text-2xl font-semibold text-charcoal mt-1">Kids Indian Size Chart</h3>
+        </div>
+        <button
+          onclick="closeSizeGuideModal()"
+          aria-label="Close Size Chart"
+          class="w-9 h-9 rounded-full bg-sand flex items-center justify-center text-berry hover:bg-berry hover:text-white transition-colors"
+        >
+          ✕
+        </button>
+      </div>
+
+      <div class="flex items-center justify-between bg-sand/80 p-2 rounded-xl mb-5 border border-gold/30">
+        <span class="text-xs font-medium text-muted pl-2">Garment Measurements:</span>
+        <div class="inline-flex rounded-lg bg-cream p-1 border border-gold/40">
+          <button
+            id="unit-in-btn"
+            onclick="switchSizeUnit('in')"
+            class="px-3 py-1 rounded-md text-xs font-bold bg-berry text-cream transition-colors"
+          >
+            Inches
+          </button>
+          <button
+            id="unit-cm-btn"
+            onclick="switchSizeUnit('cm')"
+            class="px-3 py-1 rounded-md text-xs font-bold text-charcoal hover:bg-sand transition-colors"
+          >
+            CM
+          </button>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto rounded-2xl border border-gold/40 bg-white">
+        <table class="w-full text-left border-collapse text-sm">
+          <thead>
+            <tr class="bg-peach/60 text-berry text-xs uppercase tracking-wider">
+              <th class="py-3 px-4 font-bold">Age Group</th>
+              <th class="py-3 px-4 font-bold">Chest</th>
+              <th class="py-3 px-4 font-bold">Waist</th>
+              <th class="py-3 px-4 font-bold">Top / Frock</th>
+              <th class="py-3 px-4 font-bold">Bottom</th>
+            </tr>
+          </thead>
+          <tbody id="size-chart-tbody" class="divide-y divide-gold/20 text-charcoal"></tbody>
+        </table>
+      </div>
+
+      <div class="mt-5 p-4 rounded-2xl bg-peach/40 border border-gold/40 text-xs text-charcoal space-y-1.5 leading-relaxed">
+        <p class="font-bold text-berry">Parent Sizing Tip for Paruthi Cottons:</p>
+        <p>• Every Paruthi garment includes a 1-inch inner growth seam allowance and soft elasticated waists for active little ones.</p>
+        <p>• If your child is tall for their age or between two age brackets, we recommend choosing the next age size up.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. STORE POLICIES MODAL -->
+  <div id="policy-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-charcoal/60 backdrop-blur-sm">
+    <div class="bg-ivory rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border-2 border-gold/50 relative">
+      <div class="flex items-center justify-between mb-4">
+        <h3 id="policy-modal-title" class="font-serif text-2xl font-semibold text-charcoal">Store Policy</h3>
+        <button
+          onclick="closePolicyModal()"
+          class="w-9 h-9 rounded-full bg-sand flex items-center justify-center text-berry hover:bg-berry hover:text-white transition-colors"
+        >
+          ✕
+        </button>
+      </div>
+      <div id="policy-modal-body" class="text-sm text-muted space-y-3 leading-relaxed"></div>
+    </div>
+  </div>
+
+  <!-- 9. SLIDE-OVER SHOPPING CART & UPI / WHATSAPP CHECKOUT DRAWER -->
+  <div id="cart-drawer-backdrop" onclick="toggleCartDrawer(false)" class="fixed inset-0 z-50 hidden bg-charcoal/50 backdrop-blur-xs transition-opacity"></div>
+
+  <aside
+    id="cart-drawer"
+    aria-label="Shopping Bag Drawer"
+    class="fixed top-0 right-0 z-50 h-full w-full max-w-md bg-ivory shadow-2xl border-l-2 border-gold/50 transform translate-x-full transition-transform duration-300 ease-out flex flex-col"
+  >
+    <div class="px-6 py-4 border-b border-gold/30 flex items-center justify-between bg-peach/40">
+      <div>
+        <h2 class="font-serif text-xl font-semibold text-berry">Your Paruthi Bag</h2>
+        <p id="drawer-item-count" class="text-xs text-muted">0 outfits selected</p>
+      </div>
+      <button
+        onclick="toggleCartDrawer(false)"
+        aria-label="Close Cart"
+        class="w-9 h-9 rounded-full bg-cream border border-gold/50 flex items-center justify-center text-berry hover:bg-berry hover:text-white transition-colors"
+      >
+        ✕
+      </button>
+    </div>
+
+    <div class="px-6 py-3 bg-sand/80 border-b border-gold/30">
+      <p id="shipping-progress-text" class="text-xs font-medium text-charcoal mb-1.5">
+        Add ₹799 more for FREE Shipping across India!
+      </p>
+      <div class="w-full h-2 bg-berry/15 rounded-full overflow-hidden">
+        <div id="shipping-progress-bar" class="h-full bg-berry rounded-full transition-all duration-300" style="width: 0%;"></div>
+      </div>
+    </div>
+
+    <div class="flex-1 overflow-y-auto px-6 py-5 space-y-6">
+      <div id="empty-cart-view" class="text-center py-12">
+        <div class="w-14 h-14 rounded-full bg-peach/70 border border-gold mx-auto flex items-center justify-center text-berry mb-3">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+          </svg>
+        </div>
+        <p class="font-serif text-lg text-charcoal">Your Paruthi bag is empty</p>
+        <p class="text-xs text-muted mt-1">Explore our kids collection and pick your little one's age size.</p>
+        <button
+          onclick="toggleCartDrawer(false)"
+          class="mt-5 px-6 py-2.5 rounded-full bg-berry text-cream text-xs font-semibold uppercase tracking-wider hover:bg-berryDark transition-colors"
+        >
+          Browse Kids Wear
+        </button>
+      </div>
+
+      <div id="cart-items-container" class="space-y-4"></div>
+
+      <div id="checkout-section" class="hidden space-y-5 pt-4 border-t border-gold/30">
+        <div class="bg-white p-4 rounded-2xl border border-gold/40 space-y-2 text-sm">
+          <div class="flex justify-between text-muted">
+            <span>Subtotal</span>
+            <span id="summary-subtotal">₹0</span>
+          </div>
+          <div class="flex justify-between text-muted">
+            <span>Shipping</span>
+            <span id="summary-shipping">₹0</span>
+          </div>
+          <div class="flex justify-between font-bold text-base text-charcoal pt-2 border-t border-gold/25">
+            <span>Grand Total</span>
+            <span id="summary-total" class="text-berry">₹0</span>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-berry">1. Parent / Delivery Details</h3>
+          <input type="text" id="cust-name" placeholder="Parent's Full Name *" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-gold/40 text-sm focus:outline-none focus:border-berry" />
+          <input type="tel" id="cust-phone" placeholder="10-Digit Mobile / WhatsApp Number *" maxlength="13" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-gold/40 text-sm focus:outline-none focus:border-berry" />
+          <div class="grid grid-cols-3 gap-2.5">
+            <input type="text" id="cust-address" placeholder="House No, Street, Area, City *" class="col-span-2 px-3.5 py-2.5 rounded-xl bg-white border border-gold/40 text-sm focus:outline-none focus:border-berry" />
+            <input type="text" id="cust-pincode" placeholder="Pincode *" maxlength="6" class="col-span-1 px-3.5 py-2.5 rounded-xl bg-white border border-gold/40 text-sm focus:outline-none focus:border-berry" />
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-berry">2. Payment Method</h3>
+          <div class="grid grid-cols-2 gap-2.5">
+            <button type="button" id="pay-mode-upi" onclick="setPaymentMode('UPI')" class="p-3 rounded-xl border-2 border-berry bg-peach/45 text-left transition-all">
+              <p class="text-xs font-bold text-berry">UPI Instant Pay</p>
+              <p class="text-[11px] text-muted mt-0.5">Scan QR or UPI App</p>
+            </button>
+            <button type="button" id="pay-mode-cod" onclick="setPaymentMode('COD')" class="p-3 rounded-xl border border-gold/40 bg-white text-left transition-all">
+              <p class="text-xs font-bold text-charcoal">WhatsApp / COD</p>
+              <p class="text-[11px] text-muted mt-0.5">Pay on Delivery</p>
+            </button>
+          </div>
+        </div>
+
+        <div id="upi-payment-box" class="bg-white p-4 rounded-2xl border border-gold/40 text-center space-y-3">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-bold text-berry uppercase tracking-wider">Scan &amp; Pay via Any UPI App</span>
+            <span id="upi-amount-pill" class="font-bold text-charcoal bg-peach px-2.5 py-0.5 rounded-full">₹0</span>
+          </div>
+          <div class="flex justify-center py-2">
+            <div id="upi-qrcode-canvas" class="p-2.5 bg-white border border-gold/40 rounded-xl shadow-2xs inline-block"></div>
+          </div>
+          <p class="text-[11px] text-muted">
+            UPI ID: <strong id="display-upi-id" class="text-charcoal select-all">paruthi@okicici</strong>
+          </p>
+          <a id="upi-deep-link" href="#" class="block w-full py-2.5 px-4 rounded-xl bg-gold hover:bg-goldLight text-charcoal text-xs font-bold uppercase tracking-wider transition-colors">
+            Pay Now on UPI App (GPay / PhonePe / Paytm)
+          </a>
+          <p class="text-[11px] text-muted leading-snug">
+            After paying, tap <strong>"Confirm Order on WhatsApp"</strong> below to send your order &amp; payment confirmation.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onclick="submitOrderViaWhatsApp()"
+          class="w-full py-3.5 px-5 rounded-full bg-berry hover:bg-berryDark text-white font-semibold text-sm tracking-wide shadow-md transition-all flex items-center justify-center gap-2 border border-gold/40"
+        >
+          <span>Confirm Order on WhatsApp</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 pointer-events-none"></div>
+
+  <!-- 10. PARUTHI STORE CONFIGURATION & LIVE GOOGLE SHEET CSV LOGIC -->
+  <script>
+    const STORE_CONFIG = {
+      brandName: "PARUTHI",
+      tagline: "Simple Edition, Tiny Tradition",
+      whatsappNumber: "919876543210",
+      upiId: "paruthi@okicici",
+      // Paste your published Google Sheets CSV link between the quotes below:
+      googleSheetCsvUrl: "",
+      currencySymbol: "₹",
+      freeShippingThreshold: 799,
+      flatShippingCharge: 69,
+      announcementText: "FREE PAN-INDIA SHIPPING ON ORDERS ABOVE ₹799 • 100% SKIN-SAFE PURE COTTON",
+      heroHeadline: "Pure Cotton Comfort & Tiny Traditions for Little Ones.",
+      heroSubheadline: "Inspired by the gentle burst of raw Paruthi cotton, we craft breathable everyday frocks, organic dungarees, and heirloom South Indian festive wear gentle on delicate young skin.",
+      categories: [
+        "All",
+        "Tiny Tradition (Festive)",
+        "Simple Edition (Everyday)",
+        "Frocks & Dungarees",
+        "Newborn & Toddlers"
+      ],
+      PRODUCTS: [
+        {
+          id: "paruthi-01",
+          name: "Blush Ruffle Pure Cotton Frock",
+          category: "Frocks & Dungarees",
+          price: 749,
+          originalPrice: 999,
+          stockStatus: "In Stock",
+          fabric: "100% Combed Mulmul Cotton",
+          sizes: ["6-12M", "1-2Y", "2-3Y", "4-5Y", "6-7Y"],
+          colors: [
+            { name: "Paruthi Blush Peach", hex: "#F6B8A6" },
+            { name: "Berry Rose", hex: "#9E0B4A" },
+            { name: "Cotton Cream", hex: "#FFFDF7" }
+          ],
+          image: "https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?auto=format&fit=crop&w=800&q=80",
+          description: "Signature Paruthi flutter-sleeve cotton frock inspired by our emblem. Tailored with mother-of-pearl back buttons, breathable gathers, and zero scratchy tags.",
+          sizeGuide: "Relaxed A-line fit with 1-inch inner hem allowance for growing kids."
+        },
+        {
+          id: "paruthi-02",
+          name: "Organic Cotton Dungaree & Tee Set",
+          category: "Frocks & Dungarees",
+          price: 899,
+          originalPrice: 1199,
+          stockStatus: "In Stock",
+          fabric: "GOTS Certified Organic Twill & Jersey",
+          sizes: ["6-12M", "1-2Y", "2-3Y", "4-5Y", "6-7Y"],
+          colors: [
+            { name: "Berry Wine & Cream", hex: "#9E0B4A" },
+            { name: "Warm Ochre Gold", hex: "#D4A024" }
+          ],
+          image: "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?auto=format&fit=crop&w=800&q=80",
+          description: "Play-ready adjustable button-strap cotton dungarees paired with a feather-soft cream crew tee. Features roomy front bib pocket for little treasures.",
+          sizeGuide: "Two-stage shoulder button adjustments grow comfortably with your toddler."
+        },
+        {
+          id: "paruthi-03",
+          name: "Kanchi Zari-Border Pattu Pavadai Set",
+          category: "Tiny Tradition (Festive)",
+          price: 1499,
+          originalPrice: 1999,
+          stockStatus: "In Stock",
+          fabric: "Pure Mulberry Blend & Unbleached Mul Lining",
+          sizes: ["1-2Y", "2-3Y", "4-5Y", "6-7Y", "8-9Y"],
+          colors: [
+            { name: "Rani Berry & Antique Gold", hex: "#9E0B4A" },
+            { name: "Marigold & Kumkum", hex: "#D4A024" }
+          ],
+          image: "https://images.unsplash.com/photo-1621452773781-0f992fd195cb?auto=format&fit=crop&w=800&q=80",
+          description: "A timeless South Indian festive classic lined completely with breathable cotton mulmul so little girls can celebrate weddings and festivals in total comfort.",
+          sizeGuide: "Includes 1.5-inch growth margin and cushioned drawstring waist."
+        },
+        {
+          id: "paruthi-04",
+          name: "Handloom Kasavu Veshti & Kurta Set",
+          category: "Tiny Tradition (Festive)",
+          price: 1049,
+          originalPrice: 1399,
+          stockStatus: "In Stock",
+          fabric: "100% Hand-Loomed Kerala & Tamil Cotton",
+          sizes: ["6-12M", "1-2Y", "2-3Y", "4-5Y", "6-7Y", "8-9Y"],
+          colors: [
+            { name: "Cotton Cream & Gold Kasavu", hex: "#F7F1E1" },
+            { name: "Berry Border", hex: "#9E0B4A" }
+          ],
+          image: "https://images.unsplash.com/photo-1503919545889-aef636e10ad4?auto=format&fit=crop&w=800&q=80",
+          description: "Fuss-free elasticated veshti with traditional antique gold border paired with a soft short-sleeve cotton kurta. Slip-on ease for temple visits and family functions.",
+          sizeGuide: "Soft cushioned elastic waistband with secure fit."
+        },
+        {
+          id: "paruthi-05",
+          name: "Newborn Paruthi Jabla & Nappy Bundle",
+          category: "Newborn & Toddlers",
+          price: 599,
+          originalPrice: 799,
+          stockStatus: "In Stock",
+          fabric: "100% Raw Unbleached Organic Muslin",
+          sizes: ["0-6M", "6-12M", "1-2Y"],
+          colors: [
+            { name: "Pure Paruthi Cream", hex: "#FFFDF7" },
+            { name: "Soft Blush Petal", hex: "#F8CFC2" }
+          ],
+          image: "https://images.unsplash.com/photo-1522771930-78848d9293e8?auto=format&fit=crop&w=800&q=80",
+          description: "Front-tie muslin cotton jabla paired with two gentle padded cotton nappies. Dyed with baby-safe herbal pigments and finished with flat, itch-free seams.",
+          sizeGuide: "Adjustable side fabric ties for gentle newborn comfort."
+        },
+        {
+          id: "paruthi-06",
+          name: "Chettinad Play Co-ord Top & Bloomers",
+          category: "Simple Edition (Everyday)",
+          price: 699,
+          originalPrice: 949,
+          stockStatus: "In Stock",
+          fabric: "Hand-Woven Chettinad Cotton",
+          sizes: ["1-2Y", "2-3Y", "4-5Y", "6-7Y"],
+          colors: [
+            { name: "Berry & Gold Check", hex: "#9E0B4A" },
+            { name: "Peach & Olive Check", hex: "#E59882" }
+          ],
+          image: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=800&q=80",
+          description: "Breezy everyday sleeveless cotton tunic with matching elasticated shorts. Pre-washed for cloud-like softness through hot Indian summers.",
+          sizeGuide: "Standard Indian kids everyday fit."
+        }
+      ]
+    };
+
+    let activeProducts = [...STORE_CONFIG.PRODUCTS];
+    let activeCategory = "All";
+    let searchQuery = "";
+    let selectedVariants = {};
+    let cart = JSON.parse(localStorage.getItem("paruthi_kids_cart_v2")) || [];
+    let paymentMode = "UPI";
+    let sizeUnit = "in";
+    let qrCodeInstance = null;
+
+    const SIZE_CHART_DATA = [
+      { size: "0-6M",  chestIn: "17.5", waistIn: "17.0", topIn: "11.5", bottomIn: "8.0",  chestCm: "44.5", waistCm: "43.0", topCm: "29.0", bottomCm: "20.5" },
+      { size: "6-12M", chestIn: "19.0", waistIn: "18.5", topIn: "13.0", bottomIn: "9.5",  chestCm: "48.0", waistCm: "47.0", topCm: "33.0", bottomCm: "24.0" },
+      { size: "1-2Y",  chestIn: "20.5", waistIn: "19.5", topIn: "14.5", bottomIn: "16.5", chestCm: "52.0", waistCm: "49.5", topCm: "37.0", bottomCm: "42.0" },
+      { size: "2-3Y",  chestIn: "22.0", waistIn: "20.5", topIn: "16.0", bottomIn: "19.5", chestCm: "56.0", waistCm: "52.0", topCm: "40.5", bottomCm: "49.5" },
+      { size: "4-5Y",  chestIn: "24.0", waistIn: "22.0", topIn: "18.5", bottomIn: "23.0", chestCm: "61.0", waistCm: "56.0", topCm: "47.0", bottomCm: "58.5" },
+      { size: "6-7Y",  chestIn: "26.0", waistIn: "23.5", topIn: "21.0", bottomIn: "26.5", chestCm: "66.0", waistCm: "59.5", topCm: "53.5", bottomCm: "67.5" },
+      { size: "8-9Y",  chestIn: "28.5", waistIn: "25.5", topIn: "24.0", bottomIn: "30.5", chestCm: "72.5", waistCm: "65.0", topCm: "61.0", bottomCm: "77.5" }
+    ];
+
+    window.addEventListener("DOMContentLoaded", async () => {
+      hydrateBranding();
+      initDefaultVariants();
+      renderCategoryPills();
+      renderProducts();
+      renderSizeChartTable();
+      updateCartUI();
+
+      setTimeout(() => {
+        const medallion = document.getElementById("hero-logo-medallion");
+        if (medallion) {
+          triggerCottonBurstAtElement(medallion, 18);
+        }
+      }, 650);
+
+      if (STORE_CONFIG.googleSheetCsvUrl && STORE_CONFIG.googleSheetCsvUrl.trim()) {
+        await loadProductsFromGoogleSheet(STORE_CONFIG.googleSheetCsvUrl.trim());
+      }
+    });
+
+    function parseCSV(csvText) {
+      const rows = [];
+      let row = [];
+      let field = "";
+      let inQuotes = false;
+
+      for (let i = 0; i < csvText.length; i++) {
+        const char = csvText[i];
+        const next = csvText[i + 1];
+
+        if (char === '"') {
+          if (inQuotes && next === '"') {
+            field += '"';
+            i++;
+          } else {
+            inQuotes = !inQuotes;
+          }
+        } else if (char === "," && !inQuotes) {
+          row.push(field.trim());
+          field = "";
+        } else if ((char === "\n" || char === "\r") && !inQuotes) {
+          if (char === "\r" && next === "\n") i++;
+          row.push(field.trim());
+          if (row.some(cell => cell !== "")) rows.push(row);
+          row = [];
+          field = "";
+        } else {
+          field += char;
+        }
+      }
+
+      if (field.length > 0 || row.length > 0) {
+        row.push(field.trim());
+        if (row.some(cell => cell !== "")) rows.push(row);
+      }
+
+      if (rows.length < 2) return [];
+      const headers = rows[0].map(h => h.replace(/^\uFEFF/, "").trim().toLowerCase());
+
+      return rows.slice(1).map(cells => {
+        const item = {};
+        headers.forEach((h, idx) => {
+          item[h] = (cells[idx] || "").trim();
+        });
+        return item;
+      });
+    }
+
+    function parseColorsCell(rawColors) {
+      if (!rawColors) {
+        return [{ name: "Paruthi Blush Peach", hex: "#F6B8A6" }];
+      }
+      return rawColors
+        .split(";")
+        .map(part => part.trim())
+        .filter(Boolean)
+        .map(entry => {
+          const [namePart, hexPart] = entry.split(":");
+          const name = (namePart || "Cotton Shade").trim();
+          const hex = (hexPart || "#9E0B4A").trim();
+          return { name, hex: hex.startsWith("#") ? hex : `#${hex}` };
+        });
+    }
+
+    function isSoldOutStatus(stockVal) {
+      const val = String(stockVal || "").trim().toLowerCase();
+      if (!val) return false;
+      if (["sold out", "out of stock", "soldout", "no", "false", "unavailable", "0"].includes(val)) {
+        return true;
+      }
+      const num = Number(val);
+      return !Number.isNaN(num) && num <= 0;
+    }
+
+    async function loadProductsFromGoogleSheet(csvUrl) {
+      const noteEl = document.getElementById("inventory-source-note");
+      try {
+        const cacheBuster = csvUrl.includes("?") ? `&_t=${Date.now()}` : `?_t=${Date.now()}`;
+        const response = await fetch(`${csvUrl}${cacheBuster}`, { cache: "no-store" });
+        if (!response.ok) throw new Error("Network response not OK");
+
+        const csvText = await response.text();
+        const records = parseCSV(csvText);
+        if (!records.length) throw new Error("Empty sheet");
+
+        const mapped = records
+          .filter(r => r.name)
+          .map((r, idx) => {
+            const price = Number(String(r.price || "0").replace(/[^0-9.]/g, "")) || 0;
+            const origRaw = Number(String(r.originalprice || "0").replace(/[^0-9.]/g, "")) || 0;
+            const sizes = (r.sizes || "1-2Y|2-3Y|4-5Y|6-7Y")
+              .split(/[|,]/)
+              .map(s => s.trim())
+              .filter(Boolean);
+
+            return {
+              id: r.id || `sheet-item-${idx + 1}`,
+              name: r.name,
+              category: r.category || "Simple Edition (Everyday)",
+              price,
+              originalPrice: origRaw > price ? origRaw : null,
+              stockStatus: isSoldOutStatus(r.stock) ? "Sold Out" : "In Stock",
+              fabric: r.fabric || "100% Pure Cotton",
+              sizes: sizes.length ? sizes : ["2-3Y"],
+              colors: parseColorsCell(r.colors),
+              image: r.image || "https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?auto=format&fit=crop&w=800&q=80",
+              description: r.description || "Soft breathable Paruthi cotton outfit crafted for kids.",
+              sizeGuide: "Relaxed kids fit with soft seams."
+            };
+          });
+
+        if (mapped.length > 0) {
+          activeProducts = mapped;
+          const sheetCats = Array.from(new Set(mapped.map(p => p.category).filter(Boolean)));
+          STORE_CONFIG.categories = ["All", ...sheetCats];
+          initDefaultVariants();
+          renderCategoryPills();
+          renderProducts();
+          if (noteEl) {
+            noteEl.textContent = "Live stock & prices synced from Google Sheets.";
+          }
+        }
+      } catch (err) {
+        console.warn("Google Sheet sync fallback active:", err);
+        if (noteEl) {
+          noteEl.textContent = "Pick your child's age size directly on any outfit and add to your bag.";
+        }
+      }
+    }
+
+    function triggerCottonBurst(originX, originY, count = 16) {
+      for (let i = 0; i < count; i++) {
+        const particle = document.createElement("div");
+        particle.className = "cotton-burst-particle";
+
+        const isPetal = i % 4 === 0;
+        const isSparkle = i % 5 === 0 && !isPetal;
+        const size = isSparkle ? 8 + Math.random() * 6 : 18 + Math.random() * 16;
+
+        if (isPetal) {
+          particle.innerHTML = `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none"><path d="M12 2C12 2 4 10 4 16C4 20 8 22 12 22C16 22 20 20 20 16C20 10 12 2 12 2Z" fill="#9E0B4A"/></svg>`;
+        } else if (isSparkle) {
+          particle.innerHTML = `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" fill="#D4A024"/></svg>`;
+        } else {
+          particle.innerHTML = `<svg width="${size}" height="${size}" viewBox="0 0 36 36" fill="none"><circle cx="18" cy="13" r="7.5" fill="#FFFDF7" stroke="#D4A024" stroke-width="1.5"/><circle cx="12" cy="19" r="6.8" fill="#FFFDF7" stroke="#D4A024" stroke-width="1.5"/><circle cx="24" cy="19" r="6.8" fill="#FFFDF7" stroke="#D4A024" stroke-width="1.5"/><path d="M18 28C18 28 11 24 10 19C14 20 17 24 18 28Z" fill="#9E0B4A"/><path d="M18 28C18 28 25 24 26 19C22 20 19 24 18 28Z" fill="#9E0B4A"/></svg>`;
+        }
+
+        particle.style.left = `${originX - size / 2}px`;
+        particle.style.top = `${originY - size / 2}px`;
+        document.body.appendChild(particle);
+
+        const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.45;
+        const velocity = 65 + Math.random() * 125;
+        const tx = Math.cos(angle) * velocity;
+        const ty = Math.sin(angle) * velocity - 45;
+        const rot = (Math.random() - 0.5) * 320;
+        const duration = 950 + Math.random() * 650;
+
+        particle.animate(
+          [
+            { transform: "translate(0px, 0px) scale(0.3) rotate(0deg)", opacity: 1 },
+            { transform: `translate(${tx * 0.75}px, ${ty * 0.75}px) scale(1.1) rotate(${rot * 0.6}deg)`, opacity: 1, offset: 0.45 },
+            { transform: `translate(${tx}px, ${ty + 35}px) scale(0.85) rotate(${rot}deg)`, opacity: 0 }
+          ],
+          {
+            duration,
+            easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+            fill: "forwards"
+          }
+        ).onfinish = () => particle.remove();
+      }
+    }
+
+    function triggerCottonBurstAtElement(el, count = 16) {
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      triggerCottonBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, count);
+
+      const bloom = document.getElementById("hero-cotton-bloom");
+      if (bloom && el.id === "hero-logo-medallion") {
+        bloom.classList.remove("animate-cotton-bloom");
+        void bloom.offsetWidth;
+        bloom.classList.add("animate-cotton-bloom");
+      }
+    }
+
+    function handleLogoClick(e) {
+      e.preventDefault();
+      triggerCottonBurstAtElement(e.currentTarget, 16);
+      resetFilters();
+    }
+
+    function hydrateBranding() {
+      document.title = `${STORE_CONFIG.brandName} — ${STORE_CONFIG.tagline}`;
+      document.getElementById("announcement-bar").textContent = STORE_CONFIG.announcementText;
+      document.getElementById("hero-headline").textContent = STORE_CONFIG.heroHeadline;
+      document.getElementById("hero-subheadline").textContent = STORE_CONFIG.heroSubheadline;
+      document.getElementById("footer-year").textContent = new Date().getFullYear();
+      document.getElementById("display-upi-id").textContent = STORE_CONFIG.upiId;
+
+      const waSupportMsg = encodeURIComponent(`Hi ${STORE_CONFIG.brandName}! I have a question about your kids clothing collection.`);
+      document.getElementById("footer-whatsapp-link").href = `https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${waSupportMsg}`;
+    }
+
+    function initDefaultVariants() {
+      activeProducts.forEach(product => {
+        const defaultSize = product.sizes.includes("2-3Y") ? "2-3Y" : product.sizes[0];
+        const defaultColor = (product.colors[0] && product.colors[0].name) || "Paruthi Blush Peach";
+        selectedVariants[product.id] = { size: defaultSize, color: defaultColor };
+      });
+    }
+
+    function renderCategoryPills() {
+      const container = document.getElementById("category-pills");
+      container.innerHTML = STORE_CONFIG.categories.map(cat => {
+        const isActive = activeCategory === cat;
+        return `
+          <button
+            onclick="selectCategory('${cat.replace(/'/g, "\\'")}')"
+            class="px-4 py-2 rounded-full text-xs font-semibold tracking-wide whitespace-nowrap transition-all ${
+              isActive
+                ? "bg-berry text-cream shadow-xs border border-gold/50"
+                : "bg-sand/90 text-charcoal hover:bg-peach/70 border border-gold/30"
+            }"
+          >
+            ${cat}
+          </button>
+        `;
+      }).join("");
+    }
+
+    function selectCategory(category) {
+      activeCategory = category;
+      renderCategoryPills();
+      renderProducts();
+    }
+
+    function handleSearch(value) {
+      searchQuery = value.trim().toLowerCase();
+      document.getElementById("desktop-search").value = value;
+      document.getElementById("mobile-search").value = value;
+      renderProducts();
+    }
+
+    function resetFilters(e) {
+      if (e) e.preventDefault();
+      activeCategory = "All";
+      searchQuery = "";
+      document.getElementById("desktop-search").value = "";
+      document.getElementById("mobile-search").value = "";
+      renderCategoryPills();
+      renderProducts();
+    }
+
+    function renderProducts() {
+      const grid = document.getElementById("product-grid");
+      const emptyState = document.getElementById("empty-state");
+      const countLabel = document.getElementById("product-count-label");
+
+      const filtered = activeProducts.filter(product => {
+        const matchesCat = activeCategory === "All" || product.category === activeCategory;
+        const matchesSearch =
+          !searchQuery ||
+          product.name.toLowerCase().includes(searchQuery) ||
+          product.fabric.toLowerCase().includes(searchQuery) ||
+          product.category.toLowerCase().includes(searchQuery);
+        return matchesCat && matchesSearch;
+      });
+
+      countLabel.textContent = `Showing ${filtered.length} ${filtered.length === 1 ? "kids outfit" : "kids outfits"}${
+        activeCategory !== "All" ? ` in ${activeCategory}` : ""
+      }`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = "";
+        emptyState.classList.remove("hidden");
+        return;
+      }
+
+      emptyState.classList.add("hidden");
+
+      grid.innerHTML = filtered.map(product => {
+        const currentVar = selectedVariants[product.id] || {
+          size: product.sizes[0],
+          color: product.colors[0].name
+        };
+        const isSoldOut = product.stockStatus === "Sold Out";
+        const hasDiscount = !isSoldOut && product.originalPrice && product.originalPrice > product.price;
+        const discountPct = hasDiscount
+          ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+          : 0;
+
+        return `
+          <article class="group bg-white rounded-3xl border border-gold/40 overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col ${isSoldOut ? "opacity-90" : ""}">
+            <div class="relative aspect-[4/5] bg-sand overflow-hidden">
+              <img
+                src="${product.image}"
+                onerror="this.src='https://placehold.co/800x1000/FCD5C7/9E0B4A?text=${encodeURIComponent(product.name)}'"
+                alt="${product.name}"
+                onclick="openQuickViewModal('${product.id}')"
+                class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 cursor-pointer"
+              />
+
+              ${
+                isSoldOut
+                  ? `<span class="absolute top-3.5 left-3.5 bg-charcoal text-cream text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-xs border border-gold/50">
+                      Sold Out
+                    </span>`
+                  : hasDiscount
+                  ? `<span class="absolute top-3.5 left-3.5 bg-berry text-cream text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-xs border border-gold/50">
+                      ${discountPct}% OFF
+                    </span>`
+                  : ""
+              }
+
+              <button
+                onclick="openQuickViewModal('${product.id}')"
+                class="absolute bottom-3.5 right-3.5 bg-cream/95 hover:bg-berry text-berry hover:text-cream text-xs font-semibold px-3.5 py-2 rounded-full shadow-sm border border-gold/50 backdrop-blur-xs transition-colors"
+              >
+                Fabric &amp; Fit
+              </button>
+            </div>
+
+            <div class="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
+              <div>
+                <div class="flex items-center justify-between gap-2 text-xs text-muted mb-1">
+                  <span class="uppercase tracking-wider font-bold text-berry">${product.category}</span>
+                  <span class="truncate max-w-[155px]">${product.fabric}</span>
+                </div>
+
+                <h3
+                  onclick="openQuickViewModal('${product.id}')"
+                  class="font-serif text-lg font-semibold text-charcoal hover:text-berry transition-colors cursor-pointer line-clamp-1"
+                >
+                  ${product.name}
+                </h3>
+
+                <div class="flex items-baseline gap-2 mt-1.5">
+                  <span class="text-lg font-bold text-charcoal">${STORE_CONFIG.currencySymbol}${product.price.toLocaleString("en-IN")}</span>
+                  ${
+                    hasDiscount
+                      ? `<span class="text-xs text-muted line-through">${STORE_CONFIG.currencySymbol}${product.originalPrice.toLocaleString("en-IN")}</span>`
+                      : ""
+                  }
+                </div>
+              </div>
+
+              <div class="space-y-3 pt-2 border-t border-gold/25">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs text-muted">Shade: <strong class="text-charcoal font-medium">${currentVar.color}</strong></span>
+                  <div class="flex items-center gap-1.5">
+                    ${product.colors.map(c => {
+                      const isColorSelected = currentVar.color === c.name;
+                      return `
+                        <button
+                          type="button"
+                          title="${c.name}"
+                          onclick="selectCardColor('${product.id}', '${c.name.replace(/'/g, "\\'")}')"
+                          class="w-5 h-5 rounded-full border transition-transform ${
+                            isColorSelected ? "ring-2 ring-offset-1 ring-berry scale-110 border-gold" : "border-charcoal/25 hover:scale-105"
+                          }"
+                          style="background-color: ${c.hex};"
+                        ></button>
+                      `;
+                    }).join("")}
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex items-center justify-between text-xs mb-1.5">
+                    <span class="text-muted">Select Age Size:</span>
+                    <button onclick="openSizeGuideModal()" class="text-berry hover:underline font-medium">Kids Size Chart</button>
+                  </div>
+                  <div class="flex flex-wrap gap-1.5">
+                    ${product.sizes.map(sz => {
+                      const isSizeSelected = currentVar.size === sz;
+                      return `
+                        <button
+                          type="button"
+                          onclick="selectCardSize('${product.id}', '${sz.replace(/'/g, "\\'")}')"
+                          class="min-w-[44px] px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                            isSizeSelected
+                              ? "bg-berry text-cream shadow-xs"
+                              : "bg-sand/80 text-charcoal hover:bg-peach/70 border border-gold/30"
+                          }"
+                        >
+                          ${sz}
+                        </button>
+                      `;
+                    }).join("")}
+                  </div>
+                </div>
+
+                ${
+                  isSoldOut
+                    ? `<button
+                        type="button"
+                        disabled
+                        class="w-full py-3 px-4 rounded-full bg-charcoal/20 text-muted text-xs font-bold uppercase tracking-wider cursor-not-allowed"
+                      >
+                        Sold Out
+                      </button>`
+                    : `<button
+                        type="button"
+                        onclick="addToCart('${product.id}', this)"
+                        class="w-full py-3 px-4 rounded-full bg-berry hover:bg-berryDark text-cream text-xs font-bold uppercase tracking-wider shadow-xs border border-gold/40 transition-all active:scale-[0.98]"
+                      >
+                        Add to Bag — ${STORE_CONFIG.currencySymbol}${product.price.toLocaleString("en-IN")}
+                      </button>`
+                }
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function selectCardSize(productId, size) {
+      selectedVariants[productId].size = size;
+      renderProducts();
+    }
+
+    function selectCardColor(productId, colorName) {
+      selectedVariants[productId].color = colorName;
+      renderProducts();
+    }
+
+    function openQuickViewModal(productId) {
+      const product = activeProducts.find(p => p.id === productId);
+      if (!product) return;
+
+      const currentVar = selectedVariants[product.id];
+      const isSoldOut = product.stockStatus === "Sold Out";
+      const hasDiscount = !isSoldOut && product.originalPrice && product.originalPrice > product.price;
+
+      const content = document.getElementById("quickview-content");
+      content.innerHTML = `
+        <div class="bg-sand aspect-[4/5] md:aspect-auto">
+          <img
+            src="${product.image}"
+            onerror="this.src='https://placehold.co/800x1000/FCD5C7/9E0B4A?text=${encodeURIComponent(product.name)}'"
+            alt="${product.name}"
+            class="w-full h-full object-cover"
+          />
+        </div>
+        <div class="p-6 sm:p-8 flex flex-col justify-between space-y-5">
+          <div class="space-y-3">
+            <span class="inline-block px-3 py-1 rounded-full bg-peach/70 border border-gold/40 text-berry text-xs font-bold uppercase tracking-wider">
+              ${product.category}
+            </span>
+            <h3 class="font-serif text-2xl sm:text-3xl font-semibold text-charcoal">${product.name}</h3>
+            <div class="flex items-baseline gap-2.5">
+              <span class="text-2xl font-bold text-berry">${STORE_CONFIG.currencySymbol}${product.price.toLocaleString("en-IN")}</span>
+              ${
+                hasDiscount
+                  ? `<span class="text-sm text-muted line-through">${STORE_CONFIG.currencySymbol}${product.originalPrice.toLocaleString("en-IN")}</span>`
+                  : ""
+              }
+              <span class="text-xs text-muted">(Incl. of all taxes)</span>
+            </div>
+            <p class="text-sm text-muted leading-relaxed pt-2">${product.description}</p>
+            <div class="bg-sand/70 border border-gold/30 p-3.5 rounded-2xl space-y-1 text-xs">
+              <p><strong class="text-berry">Fabric:</strong> <span class="text-charcoal">${product.fabric}</span></p>
+              <p><strong class="text-berry">Kids Fit Note:</strong> <span class="text-charcoal">${product.sizeGuide}</span></p>
+            </div>
+          </div>
+
+          <div class="space-y-4 pt-3 border-t border-gold/30">
+            <div>
+              <p class="text-xs text-muted mb-2">Shade: <strong class="text-charcoal">${currentVar.color}</strong></p>
+              <div class="flex flex-wrap gap-2">
+                ${product.colors.map(c => `
+                  <button
+                    type="button"
+                    onclick="selectCardColor('${product.id}', '${c.name.replace(/'/g, "\\'")}'); openQuickViewModal('${product.id}');"
+                    class="px-3 py-1.5 rounded-full text-xs font-medium border flex items-center gap-1.5 ${
+                      currentVar.color === c.name ? "border-berry bg-berry text-cream" : "border-gold/40 bg-white text-charcoal"
+                    }"
+                  >
+                    <span class="w-3 h-3 rounded-full border border-gold/60" style="background-color:${c.hex};"></span>
+                    ${c.name}
+                  </button>
+                `).join("")}
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-xs mb-2">
+                <span class="text-muted">Age Size: <strong class="text-charcoal">${currentVar.size}</strong></span>
+                <button onclick="closeQuickViewModal(); openSizeGuideModal();" class="text-berry font-semibold hover:underline">
+                  View Kids Size Chart
+                </button>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                ${product.sizes.map(sz => `
+                  <button
+                    type="button"
+                    onclick="selectCardSize('${product.id}', '${sz.replace(/'/g, "\\'")}'); openQuickViewModal('${product.id}');"
+                    class="px-3.5 py-2 rounded-xl text-xs font-bold ${
+                      currentVar.size === sz ? "bg-berry text-cream" : "bg-sand text-charcoal hover:bg-peach"
+                    }"
+                  >
+                    ${sz}
+                  </button>
+                `).join("")}
+              </div>
+            </div>
+
+            ${
+              isSoldOut
+                ? `<button type="button" disabled class="w-full py-3.5 rounded-full bg-charcoal/20 text-muted text-xs font-bold uppercase tracking-wider cursor-not-allowed">Sold Out</button>`
+                : `<button
+                    type="button"
+                    onclick="addToCart('${product.id}', this); closeQuickViewModal();"
+                    class="w-full py-3.5 rounded-full bg-berry hover:bg-berryDark text-cream text-xs font-bold uppercase tracking-wider shadow-md border border-gold/40 transition-colors"
+                  >
+                    Add to Bag — ${STORE_CONFIG.currencySymbol}${product.price.toLocaleString("en-IN")}
+                  </button>`
+            }
+          </div>
+        </div>
+      `;
+
+      const modal = document.getElementById("quickview-modal");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+
+    function closeQuickViewModal() {
+      const modal = document.getElementById("quickview-modal");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+
+    function openSizeGuideModal() {
+      const modal = document.getElementById("sizeguide-modal");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+
+    function closeSizeGuideModal() {
+      const modal = document.getElementById("sizeguide-modal");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+
+    function switchSizeUnit(unit) {
+      sizeUnit = unit;
+      const inBtn = document.getElementById("unit-in-btn");
+      const cmBtn = document.getElementById("unit-cm-btn");
+
+      if (unit === "in") {
+        inBtn.className = "px-3 py-1 rounded-md text-xs font-bold bg-berry text-cream transition-colors";
+        cmBtn.className = "px-3 py-1 rounded-md text-xs font-bold text-charcoal hover:bg-sand transition-colors";
+      } else {
+        cmBtn.className = "px-3 py-1 rounded-md text-xs font-bold bg-berry text-cream transition-colors";
+        inBtn.className = "px-3 py-1 rounded-md text-xs font-bold text-charcoal hover:bg-sand transition-colors";
+      }
+      renderSizeChartTable();
+    }
+
+    function renderSizeChartTable() {
+      const tbody = document.getElementById("size-chart-tbody");
+      const suffix = sizeUnit === "in" ? '"' : " cm";
+
+      tbody.innerHTML = SIZE_CHART_DATA.map(row => `
+        <tr class="hover:bg-peach/30 transition-colors">
+          <td class="py-3 px-4 font-bold text-berry">${row.size}</td>
+          <td class="py-3 px-4">${sizeUnit === "in" ? row.chestIn : row.chestCm}${suffix}</td>
+          <td class="py-3 px-4">${sizeUnit === "in" ? row.waistIn : row.waistCm}${suffix}</td>
+          <td class="py-3 px-4">${sizeUnit === "in" ? row.topIn : row.topCm}${suffix}</td>
+          <td class="py-3 px-4">${sizeUnit === "in" ? row.bottomIn : row.bottomCm}${suffix}</td>
+        </tr>
+      `).join("");
+    }
+
+    function openPolicyModal(type) {
+      const title = document.getElementById("policy-modal-title");
+      const body = document.getElementById("policy-modal-body");
+
+      if (type === "shipping") {
+        title.textContent = "Shipping & Delivery Policy";
+        body.innerHTML = `
+          <p>• <strong>Free Pan-India Shipping:</strong> Enjoy complimentary delivery on all Paruthi orders worth ${STORE_CONFIG.currencySymbol}${STORE_CONFIG.freeShippingThreshold} and above. Orders below ${STORE_CONFIG.currencySymbol}${STORE_CONFIG.freeShippingThreshold} carry a flat ${STORE_CONFIG.currencySymbol}${STORE_CONFIG.flatShippingCharge} shipping fee.</p>
+          <p>• <strong>Dispatch Timeline:</strong> Ready-to-ship kids outfits are dispatched within 24–48 business hours via trusted courier partners.</p>
+          <p>• <strong>Estimated Delivery:</strong> South India &amp; Metro cities receive orders in 2–4 working days; rest of India in 4–7 working days.</p>
+        `;
+      } else {
+        title.textContent = "7-Day Kids Size Exchange & Return Policy";
+        body.innerHTML = `
+          <p>• <strong>Easy Kids Size Exchanges:</strong> Growing kids can be tricky to size! Message us on WhatsApp within 7 days of delivery for a doorstep size swap.</p>
+          <p>• <strong>Condition:</strong> Outfits must be unworn, unwashed, and returned with original Paruthi cotton tags intact.</p>
+          <p>• <strong>Refunds:</strong> Prepaid UPI orders are refunded directly to your original UPI ID within 3 business days of quality inspection.</p>
+        `;
+      }
+
+      const modal = document.getElementById("policy-modal");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+
+    function closePolicyModal() {
+      const modal = document.getElementById("policy-modal");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+
+    function toggleCartDrawer(open) {
+      const drawer = document.getElementById("cart-drawer");
+      const backdrop = document.getElementById("cart-drawer-backdrop");
+
+      if (open) {
+        backdrop.classList.remove("hidden");
+        drawer.classList.remove("translate-x-full");
+        document.body.style.overflow = "hidden";
+        updateCartUI();
+      } else {
+        backdrop.classList.add("hidden");
+        drawer.classList.add("translate-x-full");
+        document.body.style.overflow = "";
+      }
+    }
+
+    function saveCart() {
+      localStorage.setItem("paruthi_kids_cart_v2", JSON.stringify(cart));
+    }
+
+    function addToCart(productId, triggerEl) {
+      const product = activeProducts.find(p => p.id === productId);
+      if (!product || product.stockStatus === "Sold Out") return;
+
+      if (triggerEl) {
+        triggerCottonBurstAtElement(triggerEl, 14);
+      }
+
+      const variant = selectedVariants[productId];
+      const cartKey = `${product.id}_${variant.size}_${variant.color}`;
+
+      const existingItem = cart.find(item => item.key === cartKey);
+      if (existingItem) {
+        existingItem.qty += 1;
+      } else {
+        cart.push({
+          key: cartKey,
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          image: product.image,
+          size: variant.size,
+          color: variant.color,
+          qty: 1
+        });
+      }
+
+      saveCart();
+      updateCartUI();
+      showToast(`Added ${product.name} (${variant.size}) to bag`);
+      setTimeout(() => toggleCartDrawer(true), 260);
+    }
+
+    function updateItemQty(cartKey, delta) {
+      const idx = cart.findIndex(item => item.key === cartKey);
+      if (idx === -1) return;
+
+      cart[idx].qty += delta;
+      if (cart[idx].qty <= 0) {
+        cart.splice(idx, 1);
+      }
+
+      saveCart();
+      updateCartUI();
+    }
+
+    function removeCartItem(cartKey) {
+      cart = cart.filter(item => item.key !== cartKey);
+      saveCart();
+      updateCartUI();
+    }
+
+    function calculateTotals() {
+      const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+      const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+      const qualifiesFreeShipping = subtotal >= STORE_CONFIG.freeShippingThreshold || subtotal === 0;
+      const shipping = qualifiesFreeShipping ? 0 : STORE_CONFIG.flatShippingCharge;
+      const grandTotal = subtotal + shipping;
+
+      return { subtotal, totalItems, qualifiesFreeShipping, shipping, grandTotal };
+    }
+
+    function updateCartUI() {
+      const { subtotal, totalItems, shipping, grandTotal } = calculateTotals();
+
+      document.getElementById("cart-badge").textContent = totalItems;
+      document.getElementById("drawer-item-count").textContent = `${totalItems} ${totalItems === 1 ? "outfit" : "outfits"} selected`;
+
+      const progressText = document.getElementById("shipping-progress-text");
+      const progressBar = document.getElementById("shipping-progress-bar");
+
+      if (subtotal === 0) {
+        progressText.textContent = `Add ${STORE_CONFIG.currencySymbol}${STORE_CONFIG.freeShippingThreshold} for FREE Shipping across India!`;
+        progressBar.style.width = "0%";
+      } else if (subtotal >= STORE_CONFIG.freeShippingThreshold) {
+        progressText.innerHTML = `✨ You've unlocked <strong class="text-berry">FREE Shipping</strong> across India!`;
+        progressBar.style.width = "100%";
+      } else {
+        const remaining = STORE_CONFIG.freeShippingThreshold - subtotal;
+        const pct = Math.min(100, Math.round((subtotal / STORE_CONFIG.freeShippingThreshold) * 100));
+        progressText.innerHTML = `Add <strong>${STORE_CONFIG.currencySymbol}${remaining}</strong> more for FREE Shipping!`;
+        progressBar.style.width = `${pct}%`;
+      }
+
+      const emptyView = document.getElementById("empty-cart-view");
+      const itemsContainer = document.getElementById("cart-items-container");
+      const checkoutSection = document.getElementById("checkout-section");
+
+      if (cart.length === 0) {
+        emptyView.classList.remove("hidden");
+        itemsContainer.innerHTML = "";
+        checkoutSection.classList.add("hidden");
+        return;
+      }
+
+      emptyView.classList.add("hidden");
+      checkoutSection.classList.remove("hidden");
+
+      itemsContainer.innerHTML = cart.map(item => `
+        <div class="flex gap-3.5 bg-white p-3 rounded-2xl border border-gold/40">
+          <img
+            src="${item.image}"
+            onerror="this.src='https://placehold.co/200x250/FCD5C7/9E0B4A?text=Kids+Item'"
+            alt="${item.name}"
+            class="w-16 h-20 rounded-xl object-cover bg-sand shrink-0"
+          />
+          <div class="flex-1 min-w-0 flex flex-col justify-between">
+            <div>
+              <div class="flex items-start justify-between gap-2">
+                <h4 class="text-sm font-semibold text-charcoal truncate">${item.name}</h4>
+                <button
+                  onclick="removeCartItem('${item.key}')"
+                  aria-label="Remove item"
+                  class="text-xs text-muted hover:text-berry px-1"
+                >
+                  ✕
+                </button>
+              </div>
+              <p class="text-xs text-muted mt-0.5">Age Size: <strong class="text-berry">${item.size}</strong> • ${item.color}</p>
+            </div>
+
+            <div class="flex items-center justify-between mt-2">
+              <div class="inline-flex items-center border border-gold/40 rounded-lg bg-sand/50">
+                <button onclick="updateItemQty('${item.key}', -1)" class="px-2.5 py-0.5 text-sm font-bold text-berry hover:text-berryDark">−</button>
+                <span class="px-2 text-xs font-bold text-charcoal">${item.qty}</span>
+                <button onclick="updateItemQty('${item.key}', 1)" class="px-2.5 py-0.5 text-sm font-bold text-berry hover:text-berryDark">+</button>
+              </div>
+              <span class="text-sm font-bold text-charcoal">${STORE_CONFIG.currencySymbol}${(item.price * item.qty).toLocaleString("en-IN")}</span>
+            </div>
+          </div>
+        </div>
+      `).join("");
+
+      document.getElementById("summary-subtotal").textContent = `${STORE_CONFIG.currencySymbol}${subtotal.toLocaleString("en-IN")}`;
+      document.getElementById("summary-shipping").textContent = shipping === 0 ? "FREE" : `${STORE_CONFIG.currencySymbol}${shipping}`;
+      document.getElementById("summary-total").textContent = `${STORE_CONFIG.currencySymbol}${grandTotal.toLocaleString("en-IN")}`;
+
+      updateDynamicUpiPayment(grandTotal);
+    }
+
+    function setPaymentMode(mode) {
+      paymentMode = mode;
+      const upiBtn = document.getElementById("pay-mode-upi");
+      const codBtn = document.getElementById("pay-mode-cod");
+      const upiBox = document.getElementById("upi-payment-box");
+
+      if (mode === "UPI") {
+        upiBtn.className = "p-3 rounded-xl border-2 border-berry bg-peach/45 text-left transition-all";
+        codBtn.className = "p-3 rounded-xl border border-gold/40 bg-white text-left transition-all";
+        upiBox.classList.remove("hidden");
+        const { grandTotal } = calculateTotals();
+        updateDynamicUpiPayment(grandTotal);
+      } else {
+        codBtn.className = "p-3 rounded-xl border-2 border-berry bg-peach/45 text-left transition-all";
+        upiBtn.className = "p-3 rounded-xl border border-gold/40 bg-white text-left transition-all";
+        upiBox.classList.add("hidden");
+      }
+    }
+
+    function updateDynamicUpiPayment(amount) {
+      if (amount <= 0) return;
+
+      document.getElementById("upi-amount-pill").textContent = `${STORE_CONFIG.currencySymbol}${amount.toLocaleString("en-IN")}`;
+
+      const encodedName = encodeURIComponent(STORE_CONFIG.brandName);
+      const upiNote = encodeURIComponent(`Paruthi Kids Order`);
+      const upiUrl = `upi://pay?pa=${STORE_CONFIG.upiId}&pn=${encodedName}&am=${amount.toFixed(2)}&cu=INR&tn=${upiNote}`;
+
+      document.getElementById("upi-deep-link").href = upiUrl;
+
+      const qrContainer = document.getElementById("upi-qrcode-canvas");
+      qrContainer.innerHTML = "";
+      if (typeof QRCode !== "undefined") {
+        qrCodeInstance = new QRCode(qrContainer, {
+          text: upiUrl,
+          width: 156,
+          height: 156,
+          colorDark: "#241B1E",
+          colorLight: "#FFFFFF",
+          correctLevel: QRCode.CorrectLevel.M
+        });
+      }
+    }
+
+    function submitOrderViaWhatsApp() {
+      if (cart.length === 0) {
+        showToast("Your Paruthi bag is empty.");
+        return;
+      }
+
+      const name = document.getElementById("cust-name").value.trim();
+      const phone = document.getElementById("cust-phone").value.trim();
+      const address = document.getElementById("cust-address").value.trim();
+      const pincode = document.getElementById("cust-pincode").value.trim();
+
+      if (!name || !phone || !address || !pincode) {
+        showToast("Please fill in Parent Name, Phone, Address & Pincode.");
+        return;
+      }
+
+      const { subtotal, shipping, grandTotal } = calculateTotals();
+      const orderId = "PRT-" + Math.floor(100000 + Math.random() * 900000);
+
+      const itemsLines = cart
+        .map(
+          (item, index) =>
+            `${index + 1}. *${item.name}*\n   Age Size: ${item.size} | Shade: ${item.color} | Qty: ${item.qty} — ${STORE_CONFIG.currencySymbol}${(
+              item.price * item.qty
+            ).toLocaleString("en-IN")}`
+        )
+        .join("\n");
+
+      const paymentLabel =
+        paymentMode === "UPI"
+          ? `UPI Instant Pay (UPI ID: ${STORE_CONFIG.upiId})`
+          : "Cash on Delivery / WhatsApp Confirmation";
+
+      const message =
+        `🌸 *NEW ORDER — ${STORE_CONFIG.brandName}* (${STORE_CONFIG.tagline})\n` +
+        `Order Ref: *${orderId}*\n` +
+        `--------------------------------\n` +
+        `*KIDS ITEMS ORDERED:*\n${itemsLines}\n` +
+        `--------------------------------\n` +
+        `Subtotal: ${STORE_CONFIG.currencySymbol}${subtotal.toLocaleString("en-IN")}\n` +
+        `Shipping: ${shipping === 0 ? "FREE" : STORE_CONFIG.currencySymbol + shipping}\n` +
+        `*GRAND TOTAL: ${STORE_CONFIG.currencySymbol}${grandTotal.toLocaleString("en-IN")}*\n` +
+        `Payment Mode: *${paymentLabel}*\n` +
+        `--------------------------------\n` +
+        `*DELIVERY DETAILS:*\n` +
+        `Parent Name: ${name}\n` +
+        `Phone: ${phone}\n` +
+        `Address: ${address} - ${pincode}\n\n` +
+        `Please confirm availability and dispatch timeline. Thank you!`;
+
+      const waUrl = `https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encodeURIComponent(message)}`;
+      window.open(waUrl, "_blank", "noopener,noreferrer");
+    }
+
+    function showToast(text) {
+      const container = document.getElementById("toast-container");
+      const toast = document.createElement("div");
+      toast.className =
+        "toast-enter bg-berry text-cream text-xs sm:text-sm font-medium px-5 py-3 rounded-full shadow-xl border border-gold whitespace-nowrap";
+      toast.textContent = text;
+      container.innerHTML = "";
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        if (container.contains(toast)) {
+          toast.remove();
+        }
+      }, 2800);
+    }
+  </script>
+</body>
+</html>
